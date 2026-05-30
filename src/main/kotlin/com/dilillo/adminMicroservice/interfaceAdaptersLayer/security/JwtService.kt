@@ -1,5 +1,6 @@
 package com.dilillo.adminMicroservice.interfaceAdaptersLayer.security
 
+import com.dilillo.adminMicroservice.businessLayer.boundaries.AuthenticationLogic
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.stereotype.Service
@@ -7,13 +8,13 @@ import java.util.Date
 import javax.crypto.SecretKey
 
 @Service
-class JwtService {
+class JwtService: AuthenticationLogic {
 
     private val secretString = "laTuaChiaveSegretaMoltoLungaEComplessaCheSoddisfiIRequisitiDiBitDiHmac"
     private val key: SecretKey = Keys.hmacShaKeyFor(secretString.toByteArray())
     private val expirationTimeInMs = 3600000 // 1 ora
 
-    fun generateToken(username: String): String {
+    override fun generateToken(username: String): String {
         val now = Date()
         val expiryDate = Date(now.time + expirationTimeInMs)
 
@@ -25,7 +26,7 @@ class JwtService {
             .compact()
     }
 
-    fun extractUsername(token: String): String? {
+    override fun extractUsername(token: String): String {
         return try {
             val claims = Jwts.parser()
                 .verifyWith(key)
@@ -34,11 +35,11 @@ class JwtService {
                 .payload
             claims.subject
         } catch (e: Exception) {
-            null
+            throw e
         }
     }
 
-    fun validateToken(token: String, username: String): Boolean {
+    override fun validateToken(token: String, username: String): Boolean {
         val extractedUsername = extractUsername(token)
         return (extractedUsername == username && !isTokenExpired(token))
     }
