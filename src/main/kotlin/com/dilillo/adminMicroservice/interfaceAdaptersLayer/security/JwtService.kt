@@ -10,16 +10,18 @@ import javax.crypto.SecretKey
 @Service
 class JwtService: AuthenticationLogic {
 
+    // secret key generated with openssl rand -hex 32 command in bash prompt
     private val secretString = "b3f841b9cde790258db4d5d0ea7391c117bab968ed853b6cc70e4b43355ceb5a"
     private val key: SecretKey = Keys.hmacShaKeyFor(secretString.toByteArray())
     private val expirationTimeInMs = 3600000 // 1 ora
 
-    override fun generateToken(username: String): String {
+    override fun generateToken(username: String, role: String): String {
         val now = Date()
         val expiryDate = Date(now.time + expirationTimeInMs)
 
         return Jwts.builder()
             .subject(username)
+            .claim("role", role)
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(key)
@@ -34,6 +36,19 @@ class JwtService: AuthenticationLogic {
                 .parseSignedClaims(token)
                 .payload
             claims.subject
+        } catch (e: Exception) {
+            throw e
+        }
+    }
+
+    override fun extractRole(token: String): String {
+        return try {
+            val claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .payload
+            claims["role"].toString()
         } catch (e: Exception) {
             throw e
         }

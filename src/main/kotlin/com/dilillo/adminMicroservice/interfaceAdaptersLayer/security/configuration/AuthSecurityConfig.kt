@@ -1,5 +1,6 @@
 package com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.configuration
 
+import com.dilillo.adminMicroservice.domainLayer.Role
 import com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.JwtAuthenticationFilter
 import com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.JwtService
 import org.springframework.context.annotation.Bean
@@ -21,6 +22,7 @@ class AuthSecurityConfig(private val jwtService: JwtService) {
             .authorizeHttpRequests { auth ->
                 auth
                     .requestMatchers("/api/auth/**").permitAll()
+                    .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name)
                     .anyRequest().authenticated()
             }
             .sessionManagement { session ->

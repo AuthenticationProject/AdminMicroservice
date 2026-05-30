@@ -51,13 +51,14 @@ class AdminUseCase(
         val userRetrieved: Result<User> = this.getUserInfo(loginRequest.email)
         if(userRetrieved.isSuccess) {
             val passwordRetrieved = userRetrieved.getOrThrow().password
+            val roleRetrieved = userRetrieved.getOrThrow().role
             val result = this.encodingLogic.checkMatch(
                 loginRequest.password,
                 passwordRetrieved
             )
             if(result) {
                 val hasTempPassword = this.userRepository.hasTemporaryPassword(loginRequest.email)!!
-                val token: String = authenticationLogic.generateToken(loginRequest.email)
+                val token: String = authenticationLogic.generateToken(loginRequest.email, roleRetrieved.toString())
                 return Result.success(LoginResponse(token, hasTempPassword))
             } else {
                 return Result.failure(IncorrectCredentialsException())
@@ -75,7 +76,8 @@ class AdminUseCase(
         return Result.success(User(
             entity.name!!,
             entity.hashedPassword!!,
-            entity.email!!
+            entity.email!!,
+            Role.valueOf(entity.role!!)
         ))
     }
 
