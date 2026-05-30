@@ -19,4 +19,5 @@ interface BusinessLogic {
 
     fun setTemporaryPassword(email: String): String
 
+    fun changeUsername(email: String, username: String): Boolean
 }

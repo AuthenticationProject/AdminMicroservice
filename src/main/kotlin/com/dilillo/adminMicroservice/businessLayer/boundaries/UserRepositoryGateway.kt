@@ -8,4 +8,5 @@ interface UserRepositoryGateway {
     fun changePassword(email: String, password: String): Boolean
     fun saveUser(user: UserEntity): UserEntity
     fun hasTemporaryPassword(email: String): Boolean?
+    fun changeUsername(email: String, newUsername: String): Boolean
 }

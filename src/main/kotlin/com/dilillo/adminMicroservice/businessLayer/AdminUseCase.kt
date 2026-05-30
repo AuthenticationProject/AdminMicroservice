@@ -99,4 +99,8 @@ class AdminUseCase(
             )
         return Result.success(hashedPassword)
     }
+
+    override fun changeUsername(email: String, username: String): Boolean {
+        return this.userRepository.changeUsername(email, username)
+    }
 }

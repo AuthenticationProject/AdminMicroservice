@@ -42,4 +42,16 @@ class UserRepositoryGatewayImpl(val userRepository: UserRepository): UserReposit
     override fun hasTemporaryPassword(email: String): Boolean? {
         return this.findByEmail(email).getOrNull()?.hasTemporaryPassword
     }
+
+    override fun changeUsername(email: String, newUsername: String): Boolean {
+        val user = this.findByEmail(email).map { user ->
+            user.apply {
+                name = newUsername
+            }
+            this.userRepository.save(user)
+        }
+
+        return user.isSuccess
+
+    }
 }
