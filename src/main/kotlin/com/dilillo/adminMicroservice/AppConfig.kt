@@ -5,6 +5,8 @@ import com.dilillo.adminMicroservice.businessLayer.boundaries.AuthenticationLogi
 import com.dilillo.adminMicroservice.businessLayer.boundaries.BusinessLogic
 import com.dilillo.adminMicroservice.businessLayer.boundaries.EncodingLogic
 import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.repository.UserRepository
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.repository.UserRepositoryGatewayImpl
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.utils.SimplePasswordGenerator
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -24,7 +26,7 @@ class AppConfig(val encodingLogic: EncodingLogic) {
             throw IllegalArgumentException("userRepository is null")
         if(this.authenticationLogic == null)
             throw IllegalArgumentException("authenticationLogic is null")
-        return AdminUseCase(userRepository, encodingLogic, authenticationLogic)
+        return AdminUseCase(UserRepositoryGatewayImpl(userRepository), encodingLogic, authenticationLogic, SimplePasswordGenerator())
     }
 
 }

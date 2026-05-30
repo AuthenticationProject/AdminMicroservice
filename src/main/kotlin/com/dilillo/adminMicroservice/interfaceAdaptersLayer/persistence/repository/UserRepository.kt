@@ -1,6 +1,6 @@
 package com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.repository
 
-import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.dto.UserEntity
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.entity.UserEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.Optional
 

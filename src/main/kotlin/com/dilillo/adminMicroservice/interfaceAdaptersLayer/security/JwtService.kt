@@ -10,7 +10,7 @@ import javax.crypto.SecretKey
 @Service
 class JwtService: AuthenticationLogic {
 
-    private val secretString = "laTuaChiaveSegretaMoltoLungaEComplessaCheSoddisfiIRequisitiDiBitDiHmac"
+    private val secretString = "b3f841b9cde790258db4d5d0ea7391c117bab968ed853b6cc70e4b43355ceb5a"
     private val key: SecretKey = Keys.hmacShaKeyFor(secretString.toByteArray())
     private val expirationTimeInMs = 3600000 // 1 ora
 

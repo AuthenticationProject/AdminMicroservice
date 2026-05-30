@@ -1,7 +1,8 @@
 package com.dilillo.adminMicroservice.businessLayer.conversion
 
 import com.dilillo.adminMicroservice.domainLayer.User
-import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.dto.UserEntity
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.dto.UserDto
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.entity.UserEntity
 
 fun UserEntity.toUserModel(): User {
     return User(

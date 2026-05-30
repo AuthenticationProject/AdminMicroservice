@@ -11,10 +11,12 @@ interface BusinessLogic {
 
     fun registerAdmin(registerRequest: RegisterRequest): Result<User>
 
-    fun login(loginRequest: LoginRequest): Result<String>
+    fun login(loginRequest: LoginRequest): Result<LoginResponse>
 
     fun getUserInfo(email: String): Result<User>
 
+    fun changePassword(email: String, newPassword: String): Boolean
 
+    fun setTemporaryPassword(email: String): String
 
 }
