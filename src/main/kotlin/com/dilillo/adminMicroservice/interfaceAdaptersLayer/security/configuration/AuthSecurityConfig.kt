@@ -1,5 +1,7 @@
-package com.dilillo.adminMicroservice.interfaceAdaptersLayer.security
+package com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.configuration
 
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.JwtAuthenticationFilter
+import com.dilillo.adminMicroservice.interfaceAdaptersLayer.security.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
