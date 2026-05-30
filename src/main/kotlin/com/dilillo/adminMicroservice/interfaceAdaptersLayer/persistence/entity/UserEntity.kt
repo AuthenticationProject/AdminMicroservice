@@ -1,4 +1,4 @@
-package com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.dto
+package com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.entity
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -19,6 +19,8 @@ class UserEntity {
     var hashedPassword: String? = null
 
     var role: String? = null
+
+    var hasTemporaryPassword = false
 
     fun build(name: String, email: String, password: String, role: String): UserEntity {
         this.name = name

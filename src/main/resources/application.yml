@@ -1,0 +1,13 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: superdani.d@gmail.com
+    # NOTA: Per Gmail non usare la password classica, ma una "Password per le app" generata dal tuo account Google
+    password: hjmn vcpg phck lkcr
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
