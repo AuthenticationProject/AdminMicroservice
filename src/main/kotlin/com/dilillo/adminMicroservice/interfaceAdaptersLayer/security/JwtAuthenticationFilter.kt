@@ -27,9 +27,8 @@ class JwtAuthenticationFilter(
 
             if (SecurityContextHolder.getContext().authentication == null) {
                 if (jwtService.validateToken(token, username)) {
-                    val userDetails = User.withUsername(username).password("").roles("ADMIN").build()
-
-                    val role: String? = jwtService.extractRole(token)
+                    val role: String = jwtService.extractRole(token)
+                    val userDetails = User.withUsername(username).password("").roles(role).build()
 
                     val authority: ArrayList<SimpleGrantedAuthority> = ArrayList()
                     authority.add(SimpleGrantedAuthority("ROLE_$role"))
