@@ -1,6 +1,5 @@
 package com.dilillo.adminMicroservice.interfaceAdaptersLayer.controller
 
-import com.dilillo.adminMicroservice.businessLayer.adapter.ChangePasswordRequest
 import com.dilillo.adminMicroservice.businessLayer.adapter.SetTemporaryPasswordRequest
 import com.dilillo.adminMicroservice.businessLayer.adapter.LoginRequest
 import com.dilillo.adminMicroservice.businessLayer.adapter.LoginResponse
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-
 
 @RestController
 @RequestMapping("/api/auth")
@@ -83,21 +81,6 @@ class LoginController(
                 "Congratulations!! We have generated a new temporary " +
                         "password for you, to be modified after your next login." +
                         "Use this password: " + result,
-            )
-            ResponseEntity.ok("Password changed")
-        } else {
-            ResponseEntity.status(401).build()
-        }
-    }
-
-    @PostMapping("/changePassword")
-    fun changePassword(@RequestBody request: ChangePasswordRequest): ResponseEntity<String> {
-        return if (request.email.isNotEmpty()) {
-            val result = this.businessLogic.changePassword(request.email, request.newPassword)
-            emailNotificationService.sendSimpleEmail(
-                request.email,
-                "Password changed",
-                "Your password has been changed correctly, if it weren't you contact us.",
             )
             ResponseEntity.ok("Password changed")
         } else {

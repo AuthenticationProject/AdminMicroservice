@@ -17,7 +17,7 @@ import com.dilillo.adminMicroservice.domainLayer.Role
 import com.dilillo.adminMicroservice.domainLayer.User
 import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.entity.UserEntity
 
-class AdminUseCase(
+class UserUseCase(
     val userRepository: UserRepositoryGateway,
     val encodingLogic: EncodingLogic,
     val authenticationLogic: AuthenticationLogic,
@@ -50,8 +50,9 @@ class AdminUseCase(
     override fun login(loginRequest: LoginRequest): Result<LoginResponse> {
         val userRetrieved: Result<User> = this.getUserInfo(loginRequest.email)
         if(userRetrieved.isSuccess) {
-            val passwordRetrieved = userRetrieved.getOrThrow().password
-            val roleRetrieved = userRetrieved.getOrThrow().role
+            val user = userRetrieved.getOrThrow()
+            val passwordRetrieved = user.password
+            val roleRetrieved = user.role
             val result = this.encodingLogic.checkMatch(
                 loginRequest.password,
                 passwordRetrieved
@@ -59,7 +60,7 @@ class AdminUseCase(
             if(result) {
                 val hasTempPassword = this.userRepository.hasTemporaryPassword(loginRequest.email)!!
                 val token: String = authenticationLogic.generateToken(loginRequest.email, roleRetrieved.toString())
-                return Result.success(LoginResponse(token, hasTempPassword))
+                return Result.success(LoginResponse(token, user.role.name, hasTempPassword))
             } else {
                 return Result.failure(IncorrectCredentialsException())
             }
