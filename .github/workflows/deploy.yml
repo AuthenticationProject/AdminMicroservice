@@ -9,5 +9,5 @@ jobs:
       - name: Build and push the image
         run : |
           docker login --username DiLilloDaniele --password ${{ secrets.GH_PAT }} ghcr.io
-          docker build . --tag ghcr.io/DiLilloDaniele/actions-runner-controller:latest
-          docker push ghcr.io/DiLilloDaniele/actions-runner-controller:latest
+          docker build . --tag ghcr.io/DiLilloDaniele/authenticationproject/adminmicroservice:latest
+          docker push ghcr.io/DiLilloDaniele/authenticationproject/adminmicroservice:latest
