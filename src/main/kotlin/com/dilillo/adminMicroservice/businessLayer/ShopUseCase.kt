@@ -9,8 +9,6 @@ class ShopUseCase(
     private val productRepository: ProductRepositoryGateway,
 ): ShopBusinessLogic {
 
-    // Todo check if admin exists, then create one
-
     override fun addProduct(request: AddProductRequest): Result<Int> {
         return this.productRepository.addProduct(
             Product(

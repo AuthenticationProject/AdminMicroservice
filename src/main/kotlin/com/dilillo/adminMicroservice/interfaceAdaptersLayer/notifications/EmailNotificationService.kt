@@ -4,6 +4,9 @@ import org.springframework.mail.SimpleMailMessage
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.stereotype.Service
 
+/**
+ * Email spring service
+ */
 @Service
 class EmailNotificationService(private val mailSender: JavaMailSender) {
 

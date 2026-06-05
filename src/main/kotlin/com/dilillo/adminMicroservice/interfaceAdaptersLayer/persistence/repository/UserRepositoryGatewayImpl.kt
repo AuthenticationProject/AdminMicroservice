@@ -54,4 +54,8 @@ class UserRepositoryGatewayImpl(val userRepository: UserRepository): UserReposit
         return user.isSuccess
 
     }
+
+    override fun findByRole(role: String): List<UserEntity> {
+        return this.userRepository.findByRole(role)
+    }
 }

@@ -16,6 +16,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
+/**
+ * Configuration settings for authentication, authorization, cors and http errors management
+ */
 @Configuration
 @EnableWebSecurity
 class AuthSecurityConfig(private val jwtService: JwtService) {
@@ -29,7 +32,7 @@ class AuthSecurityConfig(private val jwtService: JwtService) {
                 auth
                     .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/admin/**").hasRole(Role.ADMIN.name)
-                    .requestMatchers("/api/user/**").hasAnyRole("USER", "ADMIN")
+                    .requestMatchers("/api/user/**").hasAnyRole(Role.USER.name, Role.ADMIN.name)
                     .anyRequest().permitAll()
             }
             .sessionManagement { session ->
@@ -59,11 +62,8 @@ class AuthSecurityConfig(private val jwtService: JwtService) {
         val configuration = CorsConfiguration()
 
         configuration.allowedOrigins = listOf("http://localhost:5173", "https://localhost")
-
         configuration.allowedMethods = listOf("GET", "POST", "PUT", "DELETE", "OPTIONS")
-
         configuration.allowedHeaders = listOf("Authorization", "Content-Type", "X-Requested-With")
-
         configuration.allowCredentials = true
 
         val source = UrlBasedCorsConfigurationSource()

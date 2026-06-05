@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
+/**
+ * User entity for db mapping of all users
+ */
 @Entity
 class UserEntity {
 

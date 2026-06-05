@@ -10,6 +10,10 @@ import com.dilillo.adminMicroservice.businessLayer.exception.PasswordNotValidFor
 import com.dilillo.adminMicroservice.businessLayer.exception.UserAlreadyExistException
 import com.dilillo.adminMicroservice.businessLayer.exception.UserNotFoundException
 import com.dilillo.adminMicroservice.interfaceAdaptersLayer.notifications.EmailNotificationService
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,6 +32,43 @@ class LoginController(
         return ResponseEntity.ok("HELLO :D " + request.email)
     }
 
+    @Operation(
+        summary = "Login request",
+        description = "User performs a login request",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = LoginRequest::class)
+                )
+            ],
+            required = true
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Logged succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = LoginResponse::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "404",
+                description = "Resource not found",
+                content = [Content()]
+            ), ApiResponse(
+                responseCode = "401",
+                description = "Not authorized to perform this request",
+                content = [Content()]
+            ), ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [Content()]
+            )
+        ]
+    )
     @PostMapping("/login")
     fun login(@RequestBody request: LoginRequest): ResponseEntity<LoginResponse> {
         val tokenResult = this.businessLogic.login(request)
@@ -48,6 +89,43 @@ class LoginController(
         }
     }
 
+    @Operation(
+        summary = "Registration request",
+        description = "User performs a registration request",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = RegisterRequest::class)
+                )
+            ],
+            required = true
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "201",
+                description = "Registered succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = String::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "403",
+                description = "Resource already exists",
+                content = [Content()]
+            ), ApiResponse(
+                responseCode = "401",
+                description = "Not authorized to perform this request",
+                content = [Content()]
+            ), ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [Content()]
+            )
+        ]
+    )
     @PostMapping("/register")
     fun register(@RequestBody request: RegisterRequest): ResponseEntity<String> {
         return if (request.username != "" && request.email != "" && request.password != "") {
@@ -61,7 +139,7 @@ class LoginController(
                 ResponseEntity.ok("User registered")
             } else {
                 when (result.exceptionOrNull()) {
-                    is UserAlreadyExistException -> ResponseEntity.status(401).build()
+                    is UserAlreadyExistException -> ResponseEntity.status(403).build()
                     is PasswordNotValidForRegistrationException -> ResponseEntity.status(401).build()
                     else -> ResponseEntity.internalServerError().build()
                 }
@@ -71,6 +149,35 @@ class LoginController(
         }
     }
 
+    @Operation(
+        summary = "Temporary password request",
+        description = "User requests a temporary password",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = SetTemporaryPasswordRequest::class)
+                )
+            ],
+            required = true
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Operation done succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = String::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "401",
+                description = "Not authorized to perform this request",
+                content = [Content()]
+            )
+        ]
+    )
     @PostMapping("/setTemporaryPassword")
     fun setTemporaryPassword(@RequestBody request: SetTemporaryPasswordRequest): ResponseEntity<String> {
         return if (request.email.isNotEmpty()) {

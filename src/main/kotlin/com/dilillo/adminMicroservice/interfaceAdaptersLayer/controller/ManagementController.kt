@@ -2,6 +2,12 @@ package com.dilillo.adminMicroservice.interfaceAdaptersLayer.controller
 
 import com.dilillo.adminMicroservice.businessLayer.adapter.AddProductRequest
 import com.dilillo.adminMicroservice.businessLayer.boundaries.ShopBusinessLogic
+import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.Parameter
+import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.CrossOrigin
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,7 +31,6 @@ class ManagementController(
     private val adminUseCase: ShopBusinessLogic
 ) {
 
-    // Definisci la cartella di base (puoi anche metterla assoluta, es: "C:/my-app/uploads")
     private val rootFolder = Paths.get(System.getProperty("user.home"), "uploads")
 
     @GetMapping("/helloAdmin")
@@ -33,6 +38,35 @@ class ManagementController(
         return ResponseEntity.ok("HELLO ADMIN :D ")
     }
 
+    @Operation(
+        summary = "Add product request",
+        description = "Admin requests the insertion of a new product",
+        requestBody = io.swagger.v3.oas.annotations.parameters.RequestBody(
+            content = [
+                Content(
+                    mediaType = "application/json",
+                    schema = Schema(implementation = AddProductRequest::class)
+                )
+            ],
+            required = true
+        ),
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Operation done succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = Int::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [Content()]
+            )
+        ]
+    )
     @PostMapping("/addProduct")
     fun addProduct(@RequestBody addProductRequest: AddProductRequest): ResponseEntity<Int> {
         val result = this.adminUseCase.addProduct(addProductRequest)
@@ -42,6 +76,33 @@ class ManagementController(
             ResponseEntity.internalServerError().build()
     }
 
+    @Operation(
+        summary = "Product deletion request",
+        description = "Admin performs a product deletion request",
+        parameters = [
+            Parameter(
+                name = "productId",
+                description = "Licence id to be updated",
+                `in` = ParameterIn.PATH
+            )
+        ],
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Deleted succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = Boolean::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [Content()]
+            )
+        ]
+    )
     @DeleteMapping("/removeProduct/{productId}")
     fun removeProduct(@PathVariable productId: Int): ResponseEntity<Boolean> {
         val result = this.adminUseCase.removeProduct(productId)
@@ -51,6 +112,32 @@ class ManagementController(
             ResponseEntity.internalServerError().build()
     }
 
+    @Operation(
+        summary = "Load image request for a new product",
+        description = "Admin requests the insertion of a image for a new product",
+        parameters = [
+            Parameter(
+                name = "file",
+                description = "Image file uploaded"
+            )
+        ],
+        responses = [
+            ApiResponse(
+                responseCode = "200",
+                description = "Operation done succesfully",
+                content = [
+                    Content(
+                        mediaType = "application/json",
+                        schema = Schema(implementation = Int::class)
+                    )
+                ]
+            ), ApiResponse(
+                responseCode = "500",
+                description = "Internal server error",
+                content = [Content()]
+            )
+        ]
+    )
     @PostMapping("/loadImage")
     fun loadImage(
         @RequestParam("file") file: MultipartFile
@@ -59,15 +146,15 @@ class ManagementController(
             Files.createDirectories(rootFolder)
         }
 
-        val nomeFileUnico = "${UUID.randomUUID()}_${file.originalFilename}"
+        val uri = "${UUID.randomUUID()}_${file.originalFilename}"
 
-        val percorsoDestinazione = rootFolder.resolve(nomeFileUnico)
+        val destinationPath = rootFolder.resolve(uri)
 
         file.inputStream.use { inputStream ->
-            Files.copy(inputStream, percorsoDestinazione, StandardCopyOption.REPLACE_EXISTING)
+            Files.copy(inputStream, destinationPath, StandardCopyOption.REPLACE_EXISTING)
         }
 
-        return ResponseEntity.ok("Image saved succesfully: ${percorsoDestinazione.toAbsolutePath()}")
+        return ResponseEntity.ok(uri)
     }
 
 }

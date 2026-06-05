@@ -5,6 +5,9 @@ import com.dilillo.adminMicroservice.businessLayer.adapter.LoginResponse
 import com.dilillo.adminMicroservice.businessLayer.adapter.RegisterRequest
 import com.dilillo.adminMicroservice.domainLayer.User
 
+/**
+ * Business logic for user login/registration and other use cases
+ */
 interface BusinessLogic {
 
     fun registerUser(registerRequest: RegisterRequest): Result<User>

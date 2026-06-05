@@ -10,6 +10,9 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.User
 import org.springframework.web.filter.OncePerRequestFilter
 
+/**
+ * Jwt token filter for authentication security configuration
+ */
 class JwtAuthenticationFilter(
     private val jwtService: JwtService
 ) : OncePerRequestFilter() {
@@ -28,6 +31,7 @@ class JwtAuthenticationFilter(
                 val username = jwtService.extractUsername(token)
 
                 if (SecurityContextHolder.getContext().authentication == null) {
+                    // token and role validation
                     if (jwtService.validateToken(token, username)) {
                         val role: String = jwtService.extractRole(token)
                         val userDetails = User.withUsername(username).password("").roles(role).build()

@@ -4,6 +4,10 @@ import com.dilillo.adminMicroservice.interfaceAdaptersLayer.persistence.entity.U
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.Optional
 
+/**
+ * Spring MySql repository for users
+ */
 interface UserRepository: JpaRepository<UserEntity, Integer> {
     fun findByEmail(email: String?): Optional<UserEntity?>?
+    fun findByRole(role: String?): List<UserEntity>
 }

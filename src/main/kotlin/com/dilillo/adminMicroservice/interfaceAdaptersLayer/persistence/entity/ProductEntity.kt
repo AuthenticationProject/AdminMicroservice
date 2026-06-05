@@ -5,6 +5,9 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
+/**
+ * Product entity for db mapping of products
+ */
 @Entity
 class ProductEntity {
 

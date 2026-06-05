@@ -7,6 +7,9 @@ import org.springframework.stereotype.Service
 import java.util.Date
 import javax.crypto.SecretKey
 
+/**
+ * Jwt service for token generation, verification and validation
+ */
 @Service
 class JwtService: AuthenticationLogic {
 

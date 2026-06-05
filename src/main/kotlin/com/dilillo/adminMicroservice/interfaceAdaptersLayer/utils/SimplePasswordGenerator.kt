@@ -2,6 +2,9 @@ package com.dilillo.adminMicroservice.interfaceAdaptersLayer.utils
 
 import com.dilillo.adminMicroservice.businessLayer.boundaries.PasswordGeneratorLogic
 
+/**
+ * Simple random password generator
+ */
 class SimplePasswordGenerator: PasswordGeneratorLogic {
     override fun generatePassword(numChar: Int): String {
         val possibleChars = ('a'..'z') + ('A'..'Z') + ('0'..'9')

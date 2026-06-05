@@ -23,6 +23,25 @@ class UserUseCase(
     val authenticationLogic: AuthenticationLogic,
     val passwordGeneratorLogic: PasswordGeneratorLogic
 ): BusinessLogic {
+
+    /**
+     * Admin user initialization
+     */
+    init {
+        println("Number of admins: ${userRepository.findByRole(Role.ADMIN.toString()).size}")
+        if(userRepository.findByRole(Role.ADMIN.toString()).isEmpty()) {
+            val hashedPassword = this.hashPassword("admin").getOrThrow()
+            userRepository.saveUser(
+                UserEntity().build(
+                    "admin",
+                    "admin@info.it",
+                    hashedPassword,
+                    Role.ADMIN.toString()
+                )
+            )
+        }
+    }
+
     override fun registerUser(registerRequest: RegisterRequest): Result<User> {
         return this.registration(registerRequest, Role.USER)
     }
