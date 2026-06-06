@@ -9,7 +9,7 @@ services:
     depends_on:
       - db
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:6033/AdminMicroservice
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/AdminMicroservice
       SPRING_DATASOURCE_USERNAME: user_name
       SPRING_DATASOURCE_PASSWORD: root_password
     networks:
@@ -43,6 +43,8 @@ services:
     restart: always
     ports:
       - 8081:80
+    networks:
+      dbnet:
 
   reverse-proxy:
     image: caddy:2
