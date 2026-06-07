@@ -2,18 +2,28 @@ version: '3'
 
 services:
 
-  adminmicroservice:
-    image: ghcr.io/authenticationproject/adminmicroservice:latest
+  frontend:
+    image: ghcr.io/authenticationproject/frontend:latest
     ports:
       - "8080:8080"
     depends_on:
+      - adminmicroservice
+    networks:
+      appnet:
+
+  adminmicroservice:
+    image: ghcr.io/authenticationproject/adminmicroservice:latest
+    ports:
+      - "8090:8090"
+    depends_on:
       - db
     environment:
+      SERVER_PORT: 8090
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/AdminMicroservice
       SPRING_DATASOURCE_USERNAME: user_name
       SPRING_DATASOURCE_PASSWORD: root_password
     networks:
-      dbnet:
+      appnet:
 
   db:
     image: mysql:5.7
@@ -25,11 +35,11 @@ services:
       MYSQL_USER: user_name
       MYSQL_PASSWORD: root_password
     ports:
-      - "6033:3306"
+      - "3306:3306"
     volumes:
       - dbdata:/var/lib/mysql
     networks:
-      dbnet:
+      appnet:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -44,17 +54,19 @@ services:
     ports:
       - 8081:80
     networks:
-      dbnet:
+      appnet:
 
   reverse-proxy:
     image: caddy:2
     container_name: caddy_proxy
     ports:
-      - "443:443"
+      - "80:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
       - caddy_config:/config
+    networks:
+      appnet:
 
 volumes:
   dbdata:
@@ -62,4 +74,5 @@ volumes:
   caddy_config:
 
 networks:
-  dbnet:
+  appnet:
+    driver: bridge
