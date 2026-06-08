@@ -26,3 +26,7 @@ The Swagger API specifications are available from following url (after container
 ```
 http://localhost:8090/swagger-ui.html
 ```
+After docker deploy the Shop website will be available at the following url:
+```
+http://localhost:80
+```
