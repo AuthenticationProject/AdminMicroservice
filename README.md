@@ -4,6 +4,7 @@ This is a simple project showing the implementation of a shop service with the f
 - JWT Token based authentication and authorization
 - MySql relational dbms using Spring + Hibernate ORM
 - Email notifications (such as login or change password)
+- Clean architecture syle
 
 ![alt text](./assets/mindmap.jpg)
 ## Publication
